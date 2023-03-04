@@ -41,7 +41,7 @@ class Board:
         self.bRook1 = pieces.Rook("a8", 2)
         self.bKnight1 = pieces.Knight("b8", 2)
         self.bBishop1 = pieces.Bishop("c8", 2)
-        self.bQueen = pieces.Queen("d8", 2)
+        self.bQueen = pieces.Queen("d5", 2)
         self.bKing = pieces.King("e8", 2)
         self.bBishop2 = pieces.Bishop("f8", 2)
         self.bKnight2 = pieces.Knight("g8", 2)
@@ -141,8 +141,8 @@ class Board:
         if color == "white":
             for piece in self.whitePieces:
                 if startPosString == piece.position:  # Find the right piece
-                    filePos = piece.position[0]
-                    rankPos = piece.position[1]
+                    filePos = piece.position[0] #d
+                    rankPos = piece.position[1] #4
 
                     for move in piece.moveset:
                         if move == "p":
@@ -203,7 +203,54 @@ class Board:
                                     break
                         elif move == "d":
                             # Diagonal Moves
-                            pass
+                            #Up Left (rank + n, file - n)
+                            step = 1
+                            while ord(filePos) - step >= ord("a") and int(rankPos) + step <= 8:
+                                testPos = f"{chr(ord(filePos) - step)}{int(rankPos) + step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 2:
+                                        legalMoves.append(testPos)
+                                    break
+
+                            #Up Right (rank + n, file + n)
+                            step = 1
+                            while ord(filePos) + step <= ord("h") and int(rankPos) + step <= 8:
+                                testPos = f"{chr(ord(filePos) + step)}{int(rankPos) + step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 2:
+                                        legalMoves.append(testPos)
+                                    break
+
+                            #Down Left (rank - n, file - n)
+                            step = 1
+                            while ord(filePos) - step >= ord("a") and int(rankPos) - step >= 1:
+                                testPos = f"{chr(ord(filePos) - step)}{int(rankPos) - step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 2:
+                                        legalMoves.append(testPos)
+                                    break
+
+                            #Down Right (rank - n, file + n)
+                            step = 1
+                            while ord(filePos) + step <= ord("h") and int(rankPos) - step >= 1:
+                                testPos = f"{chr(ord(filePos) + step)}{int(rankPos) - step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 2:
+                                        legalMoves.append(testPos)
+                                    break
+
                         elif move == "g":
                             # Knight Moves
                             pass
@@ -275,7 +322,56 @@ class Board:
                                     break
                         elif move == "d":
                             # Diagonal Moves
-                            pass
+                            #Up Left (rank - n, file + n)
+                            step = 1
+                            while ord(filePos) + step <= ord("h") and int(rankPos) - step >= 1:
+                                testPos = f"{chr(ord(filePos) + step)}{int(rankPos) - step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 1:
+                                        legalMoves.append(testPos)
+                                    break
+
+
+                            #Up Right (rank - n, file - n)
+                            step = 1
+                            while ord(filePos) - step >= ord("a") and int(rankPos) - step >= 1:
+                                testPos = f"{chr(ord(filePos) - step)}{int(rankPos) - step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 1:
+                                        legalMoves.append(testPos)
+                                    break
+
+
+                            #Down Left (rank + n, file + n)
+                            step = 1
+                            while ord(filePos) + step <= ord("h") and int(rankPos) + step <= 8:
+                                testPos = f"{chr(ord(filePos) + step)}{int(rankPos) + step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 1:
+                                        legalMoves.append(testPos)
+                                    break
+
+                            #Down Right (rank + n, file - n)
+                            step = 1
+
+                            while ord(filePos) - step >= ord("a") and int(rankPos) + step <= 8:
+                                testPos = f"{chr(ord(filePos) - step)}{int(rankPos) + step}"
+                                if self.emptySquare(testPos):
+                                    legalMoves.append(testPos)
+                                    step += 1
+                                else:
+                                    if self.getColorOfPiece(testPos) == 1:
+                                        legalMoves.append(testPos)
+                                    break
                         elif move == "g":
                             # Knight Moves
                             pass
