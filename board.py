@@ -5,10 +5,12 @@ import pieces
 # the letters that represent each piece. I also wouldn't make separate classes for each type because that clutters
 # memory. ~ Saraansh
 
-# Arya Vaidya ~ 3/4/23 3:16 AM ~ Created the movesets for pawn, lateral, and vertical movement,
+# Arya Vaidya ~ 3/4/23 4:24 AM ~ Created the movesets for pawn, lateral, vertical, diagonal movement,
 # made a GitHub, connected this replit to the GitHub, made the interactable game with input and
 # everything, nothing relies on the board variable now (everything gets its data from the actual pieces),
 # im tired as hell, please kill me, and im going to commit suicide
+
+# I think the github is broken :P
 
 class Board:
     board = [["", "", "", "", "", "", "", ""],
@@ -41,7 +43,7 @@ class Board:
         self.bRook1 = pieces.Rook("a8", 2)
         self.bKnight1 = pieces.Knight("b8", 2)
         self.bBishop1 = pieces.Bishop("c8", 2)
-        self.bQueen = pieces.Queen("d5", 2)
+        self.bQueen = pieces.Queen("d8", 2)
         self.bKing = pieces.King("e8", 2)
         self.bBishop2 = pieces.Bishop("f8", 2)
         self.bKnight2 = pieces.Knight("g8", 2)
@@ -143,7 +145,7 @@ class Board:
                 if startPosString == piece.position:  # Find the right piece
                     filePos = piece.position[0] #d
                     rankPos = piece.position[1] #4
-
+                    #Need to check for En Passant, Pinned Moves, Castles, etc
                     for move in piece.moveset:
                         if move == "p":
                             #One Square Ahead
@@ -250,13 +252,36 @@ class Board:
                                     if self.getColorOfPiece(testPos) == 2:
                                         legalMoves.append(testPos)
                                     break
-
                         elif move == "g":
-                            # Knight Moves
-                            pass
+                            positions = [f"{chr(ord(filePos) - 1)}{int(rankPos) + 2}", #Up 2 Left 1
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) + 2}", #Up 2 Right 1
+                                         f"{chr(ord(filePos) + 2)}{int(rankPos) + 1}", #Right 2 Up 1
+                                         f"{chr(ord(filePos) + 2)}{int(rankPos) - 1}", #Right 2 Down 1
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) - 2}", #Down 2 Left 1
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) - 2}", #Down 2 Right 1
+                                         f"{chr(ord(filePos) - 2)}{int(rankPos) + 1}", #Left 2 Up 1
+                                         f"{chr(ord(filePos) - 2)}{int(rankPos) - 1}"] #Left 2 Down 1
+
+                            for position in positions:
+                                if self.squareExists(position):
+                                    if self.emptySquare(position) or (not self.emptySquare(position) and self.getColorOfPiece(position) == 2):
+                                        legalMoves.append(position)
                         elif move == "k":
-                            # King Moves
-                            pass
+                            positions = [f"{chr(ord(filePos) + 1)}{rankPos}",             #Right
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) + 1}",    #Up Right
+                                         f"{filePos}{int(rankPos) + 1}",                  #Up
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) + 1}",    #Up Left
+                                         f"{chr(ord(filePos) - 1)}{rankPos}",             #Left
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) - 1}",    #Down Left
+                                         f"{filePos}{int(rankPos) - 1}",                  #Down
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) - 1}"]    #Down Right
+
+                            for position in positions:
+                                if self.emptySquare(position):
+                                    legalMoves.append(position)
+                                else:
+                                    if self.getColorOfPiece(position) == 2:
+                                        legalMoves.append(position)
         elif color == "black":
             for piece in self.blackPieces:
                 if startPosString == piece.position:  # Find the right piece
@@ -373,15 +398,54 @@ class Board:
                                         legalMoves.append(testPos)
                                     break
                         elif move == "g":
-                            # Knight Moves
-                            pass
+                            positions = [f"{chr(ord(filePos) - 1)}{int(rankPos) + 2}",
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) + 2}",
+                                         f"{chr(ord(filePos) + 2)}{int(rankPos) + 1}",
+                                         f"{chr(ord(filePos) + 2)}{int(rankPos) - 1}",
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) - 2}",
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) - 2}",
+                                         f"{chr(ord(filePos) - 2)}{int(rankPos) + 1}",
+                                         f"{chr(ord(filePos) - 2)}{int(rankPos) - 1}"]
+
+                            for position in positions:
+                                if self.squareExists(position):
+                                    if self.emptySquare(position) or (
+                                            not self.emptySquare(position) and self.getColorOfPiece(position) == 1):
+                                        legalMoves.append(position)
                         elif move == "k":
-                            # King Moves
-                            pass
+                            positions = [f"{chr(ord(filePos) + 1)}{rankPos}",           # Left
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) + 1}",  # Down Left
+                                         f"{filePos}{int(rankPos) + 1}",                # Down
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) + 1}",  # Down Right
+                                         f"{chr(ord(filePos) - 1)}{rankPos}",           # Right
+                                         f"{chr(ord(filePos) - 1)}{int(rankPos) - 1}",  # Up Right
+                                         f"{filePos}{int(rankPos) - 1}",                # Up
+                                         f"{chr(ord(filePos) + 1)}{int(rankPos) - 1}"]  # Up Right
+
+                            for position in positions:
+                                if self.emptySquare(position):
+                                    legalMoves.append(position)
+                                else:
+                                    if self.getColorOfPiece(position) == 1:
+                                        legalMoves.append(position)
 
         legalMoves = set(legalMoves)
         print(legalMoves)
         return endPosString in legalMoves
+
+
+    def squareExists(self, position):
+        fileList = "abcdefgh"
+        rankList = "12345678"
+        file = position[0]
+        rank = position[1]
+
+        try:
+            fileList.index(file)
+            rankList.index(rank)
+            return True
+        except ValueError:
+            return False
 
     def checkPieceExists(self, turn, start):
         if turn == "white":
@@ -393,6 +457,7 @@ class Board:
                 if piece.position == start:
                     return True
         return False
+
     def emptySquare(self, position):
         for list in self.piecesList:
             for piece in list:
@@ -405,6 +470,7 @@ class Board:
             for piece in list:
                 if piece.position == position:
                     return piece.color
+
     def checkMate(self):
         # Do a checkmate check
         return False
