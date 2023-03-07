@@ -14,10 +14,12 @@ class Game:
         while True:
             firstCheck = True
 
-            whitePos = input(Fore.WHITE + f"Move #{moveNumber}. White's Move. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
+            whitePos = input(
+                Fore.WHITE + f"Move #{moveNumber}. White's Move. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
             while True:
                 if not firstCheck:
-                    whitePos = input(Fore.WHITE + "Input Error. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
+                    whitePos = input(
+                        Fore.WHITE + "Input Error. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
                 firstCheck = False
                 if len(whitePos) != 5:
                     continue
@@ -28,17 +30,23 @@ class Game:
                 break
 
             self.chessBoard.move(whitePos[:2], whitePos[3:], "white")
-            if self.chessBoard.checkMate():
-                print(Fore.WHITE + "White won!")
-                break
+            if self.chessBoard.check("white"):
+                if self.chessBoard.checkMate("white"):
+                    self.chessBoard.printBoard()
+                    print(Fore.RED + "White won!")
+                    break
+                else:
+                    print(Fore.RED + "Check!")
 
             self.chessBoard.printBoard()
 
             firstCheck = True
-            blackPos = input(Fore.WHITE + f"Move #{moveNumber}. Black's Move. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
+            blackPos = input(
+                Fore.WHITE + f"Move #{moveNumber}. Black's Move. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
             while True:
                 if not firstCheck:
-                    blackPos = input(Fore.WHITE + "Input Error. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
+                    blackPos = input(
+                        Fore.WHITE + "Input Error. Enter the starting square and end square seperated by a dash (Ex: a2-a4): ")
                 firstCheck = False
                 if len(blackPos) != 5:
                     continue
@@ -48,9 +56,13 @@ class Game:
                     continue
                 break
             self.chessBoard.move(blackPos[:2], blackPos[3:], "black")
-            if self.chessBoard.checkMate():
-                print(Fore.WHITE + "Black Won!")
-                break
+            if self.chessBoard.check("black"):
+                if self.chessBoard.checkMate("black"):
+                    self.chessBoard.printBoard()
+                    print(Fore.RED + "Black won!")
+                    break
+                else:
+                    print(Fore.RED + "Check!")
 
             self.chessBoard.printBoard()
             moveNumber += 1
